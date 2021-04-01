@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <style>
+        body {
+            background-image: url('search-engine.jpeg');
+            background-repeat: no-repeat;
+        }
+    </style>
+    <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
+    <link href="http://obj-cache.cloud.ruanbekker.com/favicon.ico" rel="icon">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <title>Query Search from MSMARCO dataset</title>
+</head>
+
+<body>
+<div class="container">
+    <div style="background-image: url('search-engine.jpeg');">
+        <div style="font-family: 'Book Antiqua', cursive;">
+            <p>
+            <div style="text-align: center;">
+                <span>Search for documents based on query</span>
+            </div>
+        </div>
+    </div>
+    <form action="/search/results" method="post">
+        <div class="input-group">
+            <label>
+                <input autofocus class="form-control input-lg" name="input" placeholder="Search" type="text">
+            </label>
+            <div class="input-group-btn">
+                <button class="btn btn-primary btn-lg" type="submit">
+                    <i class="glyphicon glyphicon-search"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+    <br><br>
+    <footer class="footer">
+        <p>&copy; 2021:Omer;Karthik;Sudipta</p>
+    </footer>
+</div>
+</body>
+</html>
