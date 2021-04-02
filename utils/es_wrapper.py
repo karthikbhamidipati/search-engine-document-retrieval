@@ -36,6 +36,9 @@ class ElasticWrapper:
     def get_index(self, index, id):
         return self.elastic_client.get(index=index, id=id)
 
+    def rank_eval(self, index, body):
+        return self.elastic_client.rank_eval(index=index, body=body)
+
     def _establish_connection(self, uri):
         try:
             self.elastic_client = Elasticsearch([uri], maxsize=Config.ELASTIC_SEARCH_MAX_THREADS)
