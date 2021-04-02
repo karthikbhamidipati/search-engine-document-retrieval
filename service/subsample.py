@@ -2,7 +2,7 @@ import os
 
 import pandas as pd
 
-from utils.config import config
+from utils.config import Config
 
 
 def read_data(input_dir, file_name, sep, headers,
@@ -36,12 +36,13 @@ def save_data(output_dir, file_name, df):
     :param df:
     :return:
     """
+    os.makedirs(output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, file_name)
     df.to_csv(output_path, index=False)
 
 
-def subsample_docs(input_dir, output_dir=config.SUBSAMPLED_ROOT,
-                   num_samples=config.NUM_SAMPLES):
+def subsample_docs(input_dir, output_dir=Config.SUBSAMPLED_ROOT,
+                   num_samples=Config.NUM_SAMPLES):
     """ TODO add documentation
         Input files should be stored in the below format:
             input_dir/
@@ -54,19 +55,19 @@ def subsample_docs(input_dir, output_dir=config.SUBSAMPLED_ROOT,
     :param output_dir:
     :return:
     """
-    docs_sampled = read_data(input_dir, config.DOCS_FILE_NAME, '\t',
-                             config.DOCS_HEADERS, num_samples=num_samples)
+    docs_sampled = read_data(input_dir, Config.DOCS_FILE_NAME, '\t',
+                             Config.DOCS_HEADERS, num_samples=num_samples)
 
-    save_data(output_dir, config.DOCS_FILE_NAME, docs_sampled)
+    save_data(output_dir, Config.DOCS_FILE_NAME, docs_sampled)
 
-    top100_sampled = read_data(input_dir, config.TOP100_FILE_NAME, r'\s+',
-                               config.TOP100_HEADERS, lookup_df=docs_sampled,
-                               lookup_key=config.DOCID_KEY)
+    top100_sampled = read_data(input_dir, Config.TOP100_FILE_NAME, r'\s+',
+                               Config.TOP100_HEADERS, lookup_df=docs_sampled,
+                               lookup_key=Config.DOCID_KEY)
 
-    save_data(output_dir, config.TOP100_FILE_NAME, top100_sampled)
+    save_data(output_dir, Config.TOP100_FILE_NAME, top100_sampled)
 
-    queries_sampled = read_data(input_dir, config.QUERIES_FILE_NAME, '\t',
-                                config.QUERIES_HEADERS, lookup_df=top100_sampled,
-                                lookup_key=config.QUERYID_KEY)
+    queries_sampled = read_data(input_dir, Config.QUERIES_FILE_NAME, '\t',
+                                Config.QUERIES_HEADERS, lookup_df=top100_sampled,
+                                lookup_key=Config.QUERYID_KEY)
 
-    save_data(output_dir, config.QUERIES_FILE_NAME, queries_sampled)
+    save_data(output_dir, Config.QUERIES_FILE_NAME, queries_sampled)

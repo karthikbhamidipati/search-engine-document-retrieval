@@ -3,7 +3,7 @@ import os
 
 class Config:
     # common
-    LOCAL_HOST = os.environ.get('LOCAL_HOST') or "127.0.0.1"
+    LOCAL_HOST = os.environ.get('LOCAL_HOST') or "http://127.0.0.1"
 
     # elasticsearch configurations
     ELASTIC_SEARCH_PORT = os.environ.get('ELASTIC_SEARCH_PORT') or "9200"
