@@ -1,6 +1,7 @@
 from argparse import ArgumentParser
 
 from app.search_engine import run
+from service.evaluate import rank_eval
 from service.index import index_docs
 from service.subsample import subsample_docs
 
@@ -23,7 +24,7 @@ def main():
 
     # args for subsampling
     subsample_parser = action_parser.add_parser("subsample", help="subsample docs")
-    subsample_parser.add_argument("-r", "--original-root-dir", dest="root_dir", required=True,
+    subsample_parser.add_argument("-i", "--input-dir", dest="input_dir", required=True,
                                   help="root directory of the original docs to be subsampled")
     subsample_parser.add_argument("-o", "--output-dir", dest="output_dir", required=False,
                                   help="output directory for the subsampled docs")
@@ -38,7 +39,7 @@ def main():
     # args for evaluation
     eval_parser = action_parser.add_parser("eval", help="evaluate queries from elasticsearch")
     eval_parser.add_argument("-p", "--queries-path", dest="queries_path", required=False,
-                              help="evaluate queries from elasticsearch")
+                             help="evaluate queries from elasticsearch")
 
     # args for starting search engine application
     app_parser = action_parser.add_parser("start_app", help="start search engine application")
@@ -48,12 +49,13 @@ def main():
                             help="port to start the search engine application")
 
     action, args = clean_args(parser.parse_args())
-    print(action, args)
 
     if action == 'subsample':
         subsample_docs(**args)
     elif action == 'index':
         index_docs(**args)
+    elif action == 'eval':
+        rank_eval(**args)
     elif action == 'start_app':
         run(**args)
 

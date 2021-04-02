@@ -1,14 +1,13 @@
-import requests
-from elasticsearch import Elasticsearch
+from elasticsearch import Elasticsearch, helpers
 
-from config import config
+from utils.config import Config
 
 
 class ElasticWrapper:
     """ TODO add documentation, logging, error handling
     """
 
-    def __init__(self, uri=config.ELASTIC_SEARCH_URI):
+    def __init__(self, uri=Config.ELASTIC_SEARCH_URI):
         self._establish_connection(uri)
 
     def create_index(self, index, body=None, recreate_exist=False):
@@ -26,22 +25,22 @@ class ElasticWrapper:
 
     def bulk_index(self, index, body):
         try:
-            response = self.elastic_client.bulk(index=index, body=body)
-            print('RESPONSE for document {} : {}\n'.format(index, response))
+            response = helpers.bulk(self.elastic_client, body)
+            print('RESPONSE for index {} : {}\n'.format(index, response))
         except Exception as e:
-            print('ERROR for document {} : {}\n'.format(index, e))
+            print('ERROR for index {} : {}\n'.format(index, e))
 
-    def search_index(self, index, query, size=config.NUM_RECORDS_TO_RETRIEVE):
+    def search_index(self, index, query, size=Config.NUM_RECORDS_TO_RETRIEVE):
         return self.elastic_client.search(index=index, body=query, size=size)
 
     def get_index(self, index, id):
         return self.elastic_client.get(index=index, id=id)
 
     def _establish_connection(self, uri):
-        if requests.get(uri).ok:
-            self.elastic_client = Elasticsearch([uri], maxsize=config.MAX_RECORDS_TO_RETRIEVE)
-        else:
-            raise ValueError("Invalid URI: %s" % uri)
+        try:
+            self.elastic_client = Elasticsearch([uri], maxsize=Config.ELASTIC_SEARCH_MAX_THREADS)
+        except Exception as e:
+            raise ValueError("Invalid URI: %s \nError: %s" % uri, e)
 
     def close(self):
         self.elastic_client.close()
