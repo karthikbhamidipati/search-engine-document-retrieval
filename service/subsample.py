@@ -21,8 +21,9 @@ def read_data(input_dir, file_name, sep, headers,
     """
 
     input_path = os.path.join(input_dir, file_name)
+    print('Subsampling {}'.format(input_path))
     dataset = pd.read_csv(input_path, sep=sep, names=headers, nrows=num_samples)
-    if lookup_df and lookup_key:
+    if lookup_df is not None and lookup_key:
         dataset = dataset[dataset[lookup_key].isin(lookup_df[lookup_key].to_list())]
 
     return dataset
@@ -38,6 +39,7 @@ def save_data(output_dir, file_name, df):
     """
     os.makedirs(output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, file_name)
+    print('Saving subsampled file {}'.format(output_path))
     df.to_csv(output_path, index=False)
 
 
