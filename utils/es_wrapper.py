@@ -1,4 +1,4 @@
-from elasticsearch import Elasticsearch
+from elasticsearch import Elasticsearch, helpers
 
 from utils.config import Config
 
@@ -25,10 +25,10 @@ class ElasticWrapper:
 
     def bulk_index(self, index, body):
         try:
-            response = self.elastic_client.bulk(index=index, body=body)
-            print('RESPONSE for document {} : {}\n'.format(index, response))
+            response = helpers.bulk(self.elastic_client, body)
+            print('RESPONSE for index {} : {}\n'.format(index, response))
         except Exception as e:
-            print('ERROR for document {} : {}\n'.format(index, e))
+            print('ERROR for index {} : {}\n'.format(index, e))
 
     def search_index(self, index, query, size=Config.NUM_RECORDS_TO_RETRIEVE):
         return self.elastic_client.search(index=index, body=query, size=size)

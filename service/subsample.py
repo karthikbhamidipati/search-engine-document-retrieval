@@ -22,7 +22,7 @@ def read_data(input_dir, file_name, sep, headers,
 
     input_path = os.path.join(input_dir, file_name)
     print('Subsampling {}'.format(input_path))
-    dataset = pd.read_csv(input_path, sep=sep, names=headers, nrows=num_samples)
+    dataset = pd.read_csv(input_path, sep=sep, names=headers, nrows=num_samples, keep_default_na=False)
     if lookup_df is not None and lookup_key:
         dataset = dataset[dataset[lookup_key].isin(lookup_df[lookup_key].to_list())]
 
