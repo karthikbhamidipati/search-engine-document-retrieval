@@ -13,6 +13,7 @@ class Config:
     # subsampling configurations
     SUBSAMPLED_ROOT = os.environ.get('SUBSAMPLED_ROOT') or "data/"
     NUM_SAMPLES = os.environ.get('NUM_SAMPLES') or 100
+    NUM_DOCS_PER_QUERY = os.environ.get('NUM_DOCS_PER_QUERY') or 20
 
     # input files
     DOCS_FILE_NAME = os.environ.get('file_name') or "msmarco-docs.tsv"
@@ -41,6 +42,9 @@ class Config:
     NUM_RECORDS_TO_RETRIEVE = 10
     APP_PORT = os.environ.get('APP_PORT') or "5000"
     APP_SECRET_KEY = os.environ.get('APP_SECRET_KEY') or 'mysecret'
+
+    # warnings
+    FILTER_WARNINGS = True
 
 
 config = Config()

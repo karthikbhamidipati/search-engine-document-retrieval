@@ -47,6 +47,10 @@ def save_data(output_dir, file_name, df):
     df.to_csv(output_path, index=False, single_file=True)
 
 
+def get_nsmallest(row):
+    return row.nsmallest(Config.NUM_DOCS_PER_QUERY, 'rank')
+
+
 def subsample_docs(input_dir, output_dir=Config.SUBSAMPLED_ROOT,
                    num_samples=Config.NUM_SAMPLES):
     """ TODO add documentation
@@ -69,6 +73,10 @@ def subsample_docs(input_dir, output_dir=Config.SUBSAMPLED_ROOT,
     top100_sampled = read_data(input_dir, Config.TOP100_FILE_NAME, r'\s+',
                                Config.TOP100_HEADERS, lookup_df=queries_sampled,
                                lookup_key=Config.QUERYID_KEY)
+
+    # Fetching the top n docs for each query based on rank
+    top100_sampled = top100_sampled.groupby(Config.QUERYID_KEY)
+    top100_sampled = top100_sampled.apply(get_nsmallest).reset_index(drop=True)
 
     save_data(output_dir, Config.TOP100_FILE_SAMPLED, top100_sampled)
 
