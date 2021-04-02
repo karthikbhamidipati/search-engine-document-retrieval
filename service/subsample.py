@@ -1,6 +1,6 @@
 import os
 
-import pandas as pd
+from dask import dataframe as dd
 
 from utils.config import Config
 
@@ -22,9 +22,13 @@ def read_data(input_dir, file_name, sep, headers,
 
     input_path = os.path.join(input_dir, file_name)
     print('Subsampling {}'.format(input_path))
-    dataset = pd.read_csv(input_path, sep=sep, names=headers, nrows=num_samples, keep_default_na=False)
-    if lookup_df is not None and lookup_key:
-        dataset = dataset[dataset[lookup_key].isin(lookup_df[lookup_key].to_list())]
+    dataset = dd.read_csv(input_path, sep=sep, names=headers)
+
+    if num_samples:
+        dataset = dataset.loc[:num_samples]
+    elif lookup_df is not None and lookup_key:
+        lookup_values = lookup_df[lookup_key].unique().compute()
+        dataset = dataset[dataset[lookup_key].isin(lookup_values)]
 
     return dataset
 
@@ -40,7 +44,11 @@ def save_data(output_dir, file_name, df):
     os.makedirs(output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, file_name)
     print('Saving subsampled file {}'.format(output_path))
-    df.to_csv(output_path, index=False)
+    df.to_csv(output_path, index=False, single_file=True)
+
+
+def get_nsmallest(row):
+    return row.nsmallest(Config.NUM_DOCS_PER_QUERY, 'rank')
 
 
 def subsample_docs(input_dir, output_dir=Config.SUBSAMPLED_ROOT,
@@ -57,19 +65,23 @@ def subsample_docs(input_dir, output_dir=Config.SUBSAMPLED_ROOT,
     :param output_dir:
     :return:
     """
-    docs_sampled = read_data(input_dir, Config.DOCS_FILE_NAME, '\t',
-                             Config.DOCS_HEADERS, num_samples=num_samples)
+    queries_sampled = read_data(input_dir, Config.QUERIES_FILE_NAME, '\t',
+                                Config.QUERIES_HEADERS, num_samples=num_samples)
 
-    save_data(output_dir, Config.DOCS_FILE_NAME, docs_sampled)
+    save_data(output_dir, Config.QUERIES_FILE_SAMPLED, queries_sampled)
 
     top100_sampled = read_data(input_dir, Config.TOP100_FILE_NAME, r'\s+',
-                               Config.TOP100_HEADERS, lookup_df=docs_sampled,
-                               lookup_key=Config.DOCID_KEY)
+                               Config.TOP100_HEADERS, lookup_df=queries_sampled,
+                               lookup_key=Config.QUERYID_KEY)
 
-    save_data(output_dir, Config.TOP100_FILE_NAME, top100_sampled)
+    # Fetching the top n docs for each query based on rank
+    top100_sampled = top100_sampled.groupby(Config.QUERYID_KEY)
+    top100_sampled = top100_sampled.apply(get_nsmallest).reset_index(drop=True)
 
-    queries_sampled = read_data(input_dir, Config.QUERIES_FILE_NAME, '\t',
-                                Config.QUERIES_HEADERS, lookup_df=top100_sampled,
-                                lookup_key=Config.QUERYID_KEY)
+    save_data(output_dir, Config.TOP100_FILE_SAMPLED, top100_sampled)
 
-    save_data(output_dir, Config.QUERIES_FILE_NAME, queries_sampled)
+    docs_sampled = read_data(input_dir, Config.DOCS_FILE_NAME, '\t',
+                             Config.DOCS_HEADERS, lookup_df=top100_sampled,
+                             lookup_key=Config.DOCID_KEY)
+
+    save_data(output_dir, Config.DOCS_FILE_SAMPLED, docs_sampled)

@@ -7,9 +7,9 @@ from utils.es_wrapper import ElasticWrapper
 
 
 def get_queries(queries_path):
-    top100_df = pd.read_csv(os.path.join(queries_path, Config.TOP100_FILE_NAME))
+    top100_df = pd.read_csv(os.path.join(queries_path, Config.TOP100_FILE_SAMPLED))
     top100_df = top100_df[['docid', 'rank', 'qid']].groupby('qid').agg(lambda x: list(x))
-    queries_df = pd.read_csv(os.path.join(queries_path, Config.QUERIES_FILE_NAME))
+    queries_df = pd.read_csv(os.path.join(queries_path, Config.QUERIES_FILE_SAMPLED))
     return queries_df.merge(top100_df, how='left', on='qid')
 
 

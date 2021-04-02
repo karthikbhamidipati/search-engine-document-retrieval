@@ -1,9 +1,11 @@
+import warnings
 from argparse import ArgumentParser
 
 from app.search_engine import run
 from service.evaluate import rank_eval
 from service.index import index_docs
 from service.subsample import subsample_docs
+from utils.config import Config
 
 
 def is_sub_arg(arg):
@@ -47,6 +49,10 @@ def main():
                             help="secret key to start the search engine application")
     app_parser.add_argument("-p", "--app-port", dest="port", required=False,
                             help="port to start the search engine application")
+
+    # filtering warnings based on flag
+    if Config.FILTER_WARNINGS:
+        warnings.filterwarnings("ignore")
 
     action, args = clean_args(parser.parse_args())
 

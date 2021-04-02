@@ -12,17 +12,25 @@ class Config:
 
     # subsampling configurations
     SUBSAMPLED_ROOT = os.environ.get('SUBSAMPLED_ROOT') or "data/"
-    NUM_SAMPLES = os.environ.get('NUM_SAMPLES') or 1500
+    NUM_SAMPLES = os.environ.get('NUM_SAMPLES') or 100
+    NUM_DOCS_PER_QUERY = os.environ.get('NUM_DOCS_PER_QUERY') or 20
 
-    # input data configurations
+    # input files
     DOCS_FILE_NAME = os.environ.get('file_name') or "msmarco-docs.tsv"
     QUERIES_FILE_NAME = os.environ.get('QUERIES_FILE_NAME') or "msmarco-doctrain-queries.tsv"
     TOP100_FILE_NAME = os.environ.get('TOP100_FILE_NAME') or "msmarco-doctrain-top100"
 
+    # sampled files
+    DOCS_FILE_SAMPLED = os.path.splitext(DOCS_FILE_NAME)[0] + ".csv"
+    QUERIES_FILE_SAMPLED = os.path.splitext(QUERIES_FILE_NAME)[0] + ".csv"
+    TOP100_FILE_SAMPLED = os.path.splitext(TOP100_FILE_NAME)[0] + ".csv"
+
+    # data headers
     DOCS_HEADERS = ['docid', 'url', 'title', 'body']
     QUERIES_HEADERS = ['qid', 'query']
     TOP100_HEADERS = ['qid', 'Q0', 'docid', 'rank', 'score', 'runstring']
 
+    # data keys
     DOCID_KEY = "docid"
     QUERYID_KEY = "qid"
 
@@ -34,6 +42,9 @@ class Config:
     NUM_RECORDS_TO_RETRIEVE = 10
     APP_PORT = os.environ.get('APP_PORT') or "5000"
     APP_SECRET_KEY = os.environ.get('APP_SECRET_KEY') or 'mysecret'
+
+    # warnings
+    FILTER_WARNINGS = True
 
 
 config = Config()
