@@ -35,6 +35,11 @@ def main():
     index_parser.add_argument("-p", "--docs-path", dest="docs_path", required=False,
                               help="path to index docs to elasticsearch")
 
+    # args for evaluation
+    eval_parser = action_parser.add_parser("eval", help="evaluate queries from elasticsearch")
+    eval_parser.add_argument("-p", "--queries-path", dest="queries_path", required=False,
+                              help="evaluate queries from elasticsearch")
+
     # args for starting search engine application
     app_parser = action_parser.add_parser("start_app", help="start search engine application")
     app_parser.add_argument("-s", "-secret-key", dest="secret_key", required=False,
