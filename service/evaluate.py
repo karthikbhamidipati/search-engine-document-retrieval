@@ -6,48 +6,33 @@ from utils.config import Config
 from utils.es_wrapper import ElasticWrapper
 
 
-def get_queries(queries_path):
-    top100_df = pd.read_csv(os.path.join(queries_path, Config.TOP100_FILE_NAME))
-    top100_df = top100_df[['docid', 'rank', 'qid']].groupby('qid').agg(lambda x: list(x))
-    queries_df = pd.read_csv(os.path.join(queries_path, Config.QUERIES_FILE_NAME))
-    return queries_df.merge(top100_df, how='left', on='qid')
-
-
 def get_doc_ratings(index, doc_ids, ranks):
-    doc_ratings = []
-    for doc_id, rank in zip(doc_ids, ranks):
-        doc_ratings.append(
-            {
-                "_index": index,
-                "_id": doc_id,
-                "rating": rank
-            }
-        )
-    return doc_ratings
+    for doc_id, rank in enumerate(doc_ids, ranks):
+        yield {
+            "_index": index,
+            "_id": doc_id,
+            "rating": rank
+        }
 
 
 def get_requests(index, queries_df):
-    requests = []
     for _, query_row in queries_df.iterrows():
-        requests.append(
-            {
-                "id": str(query_row['qid']),
-                "request": {
-                    "query": {
-                        "multi_match": {
-                            "query": query_row['query'],
-                            "fields": [
-                                "url",
-                                "title",
-                                "body"
-                            ]
-                        }
+        yield {
+            "id": query_row.qid,
+            "request": {
+                "query": {
+                    "multi_match": {
+                        "query": query_row.query,
+                        "fields": [
+                            "url",
+                            "title",
+                            "body"
+                        ]
                     }
-                },
-                "ratings": get_doc_ratings(index, query_row['docid'], query_row['rank'])
-            }
-        )
-    return requests
+                }
+            },
+            "ratings": get_doc_ratings(index, query_row.doc_ids, query_row.ranks)
+        }
 
 
 def rank_eval_query(index, es_wrapper, queries_df):
@@ -62,6 +47,13 @@ def rank_eval_query(index, es_wrapper, queries_df):
         }
     }
     return es_wrapper.rank_eval(index, request_body)
+
+
+def get_queries(queries_path):
+    top100_df = pd.read_csv(os.path.join(queries_path, Config.TOP100_FILE_NAME))
+    top100_df = top100_df[['docid', 'rank', 'qid']].groupby('qid').agg(lambda x: list(x))
+    queries_df = pd.read_csv(os.path.join(queries_path, Config.QUERIES_FILE_NAME))
+    return queries_df.merge(top100_df, how='left', on='qid')
 
 
 def rank_eval(queries_path=Config.SUBSAMPLED_ROOT):
