@@ -1,7 +1,7 @@
 import warnings
 from argparse import ArgumentParser
 
-from app.search_engine import run
+from web.search_engine import run
 from service.evaluate import rank_eval
 from service.index import index_docs
 from service.subsample import subsample_docs

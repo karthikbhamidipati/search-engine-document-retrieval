@@ -3,7 +3,7 @@ from flask import Flask, render_template, request
 from utils.config import config
 from utils.es_wrapper import ElasticWrapper
 
-app = Flask(__name__.split('.')[-1], template_folder="app/templates")
+app = Flask(__name__.split('.')[-1], template_folder="web/templates")
 es_wrapper = ElasticWrapper()
 
 

@@ -1,0 +1,6 @@
+# ignoring files that are not required
+LICENSE
+README.md
+data/
+.*
+*docker*
