@@ -38,7 +38,6 @@ def get_requests(index, queries_df):
                         "multi_match": {
                             "query": query_row['query'],
                             "fields": [
-                                "url",
                                 "title",
                                 "body"
                             ]

@@ -2,6 +2,9 @@ import os
 
 
 class Config:
+    """ Class to define the configurations
+    """
+
     # common
     LOCAL_HOST = os.environ.get('LOCAL_HOST') or "127.0.0.1"
 
@@ -39,7 +42,7 @@ class Config:
     BM25_INDEX_KEY = "msmarco_docs_bm25"
 
     # webapp
-    NUM_RECORDS_TO_RETRIEVE = 10
+    NUM_RECORDS_TO_RETRIEVE = NUM_DOCS_PER_QUERY
     APP_PORT = os.environ.get('APP_PORT') or "5000"
     APP_SECRET_KEY = os.environ.get('APP_SECRET_KEY') or 'mysecret'
 
@@ -54,12 +57,12 @@ class Mappings:
     """ Class to define mappings
     """
 
-    # TF-IDF with cosine similarity using vector space model
+    # Vector space model using tf-idf similarity
     VSM_MAPPING = {
         "settings": {
             "analysis": {
                 "analyzer": {
-                    "my_analyzer": {
+                    "text_analyzer": {
                         "tokenizer": "standard",
                         "filter": ["lowercase", "stemmer", "stop"]
                     }
@@ -69,8 +72,18 @@ class Mappings:
                 "similarity": {
                     "scripted_tfidf": {
                         "type": "scripted",
+                        "weight_script": {
+                            "source": """
+                                        double idf = Math.log((field.docCount + 1.0) / (term.docFreq + 1.0)) + 1.0; 
+                                        return query.boost * idf;
+                                      """
+                        },
                         "script": {
-                            "source": "double tf = Math.sqrt(doc.freq); double idf = Math.log((field.docCount+1.0)/(term.docFreq+1.0)) + 1.0; double norm = 1/Math.sqrt(doc.length); return query.boost * tf * idf * norm;"
+                            "source": """
+                                        double tf = Math.sqrt(doc.freq); 
+                                        double norm = 1 / Math.sqrt(doc.length); 
+                                        return weight * tf * norm;
+                                      """
                         }
                     }
                 }
@@ -80,8 +93,8 @@ class Mappings:
             "properties": {
                 "docid": {"type": "keyword"},
                 "url": {"type": "keyword"},
-                "title": {"type": "text", "analyzer": "my_analyzer", "similarity": "scripted_tfidf"},
-                "body": {"type": "text", "analyzer": "my_analyzer", "similarity": "scripted_tfidf"}
+                "title": {"type": "text", "analyzer": "text_analyzer", "similarity": "scripted_tfidf"},
+                "body": {"type": "text", "analyzer": "text_analyzer", "similarity": "scripted_tfidf"}
             }
         }
     }
@@ -91,7 +104,7 @@ class Mappings:
         "settings": {
             "analysis": {
                 "analyzer": {
-                    "my_analyzer": {
+                    "text_analyzer": {
                         "tokenizer": "standard",
                         "filter": ["lowercase", "stemmer", "stop"]
                     }
@@ -111,8 +124,8 @@ class Mappings:
             "properties": {
                 "docid": {"type": "keyword"},
                 "url": {"type": "keyword"},
-                "title": {"type": "text", "analyzer": "my_analyzer", "similarity": "bm25"},
-                "body": {"type": "text", "analyzer": "my_analyzer", "similarity": "bm25"}
+                "title": {"type": "text", "analyzer": "text_analyzer", "similarity": "bm25"},
+                "body": {"type": "text", "analyzer": "text_analyzer", "similarity": "bm25"}
             }
         }
     }
