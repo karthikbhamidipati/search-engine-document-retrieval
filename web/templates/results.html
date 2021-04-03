@@ -26,45 +26,61 @@
     <form action="/search/results" method="post">
         <div class="input-group">
             <input autofocus class="form-control input-lg" name="input" placeholder="Search" type="text">
-            <div class="input-group-btn">
-                <button class="btn btn-primary btn-lg" type="submit">
-                    <i class="glyphicon glyphicon-search"></i>
-                </button>
-            </div>
+            <button type="submit" formaction="/search/results?q=vsm">VSM</button>
+            <button type="submit" formaction="/search/results?q=bm25">BM25</button>
+            {#            <div class="input-group-btn">#}
+            {#                <button class="btn btn-primary btn-lg" type="submit">#}
+            {#                    <i class="glyphicon glyphicon-search"></i>#}
+            {#                </button>#}
+            {#            </div>#}
         </div>
     </form>
-    <table class="table">
+    <table id="VSM" class="table">
         <thead>
         <tr>
             <th>VSM-Title</th>
             <th>VSM-Abstract</th>
+            <th>VSM-Score</th>
         </tr>
         </thead>
         {% for hit in vsm['hits']['hits'] %}
-        <tbody>
-        <tr>
-            <td><a href="{{ hit['_source']['url'] }}">{{ hit['_source']['title'] }}</a></td>
-            <td>{{ hit['_source']['body'][:200] }}</td>
-        </tr>
-        </tbody>
+            <tbody>
+            <tr>
+                <td><a href="{{ hit['_source']['url'] }}">{{ hit['_source']['title'] }}</a></td>
+                <td style="width:50%">{{ hit['_source']['body'][:200] }}</td>
+                <td>{{ hit['_score'] }}</td>
+            </tr>
+            </tbody>
         {% endfor %}
     </table>
-    <table class="table">
+    <table id="BM25" class="table">
         <thead>
         <tr>
             <th>BM25-Title</th>
             <th>BM25-Abstract</th>
+            <th>BM25-Score</th>
         </tr>
         </thead>
         {% for hit in bm25['hits']['hits'] %}
-        <tbody>
-        <tr>
-            <td><a href="{{ hit['_source']['url'] }}">{{ hit['_source']['title'] }}</a></td>
-            <td>{{ hit['_source']['body'][:200] }}</td>
-        </tr>
-        </tbody>
+            <tbody>
+            <tr>
+                <td><a href="{{ hit['_source']['url'] }}">{{ hit['_source']['title'] }}</a></td>
+                <td style="width:50%">{{ hit['_source']['body'][:200] }}</td>
+                <td>{{ hit['_score'] }}</td>
+            </tr>
+            </tbody>
         {% endfor %}
     </table>
+    <script type="text/javascript">
+        const urlParams = new URLSearchParams(window.location.search);
+        const myParam = urlParams.get('q');
+        if (myParam == "vsm") {
+            document.getElementById('BM25').style.display = "none";
+        }
+        if (myParam == 'bm25') {
+            document.getElementById('VSM').style.display = "none";
+        }
+    </script>
     <footer class="footer">
         <p>&copy; 2021:Omer,Karthik,Sudipta</p>
     </footer>

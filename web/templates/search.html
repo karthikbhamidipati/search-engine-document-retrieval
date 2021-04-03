@@ -26,11 +26,13 @@
     <form action="/search/results" method="post">
         <div class="input-group">
             <input autofocus class="form-control input-lg" name="input" placeholder="Search" type="text">
-            <div class="input-group-btn">
-                <button class="btn btn-primary btn-lg" type="submit">
-                    <i class="glyphicon glyphicon-search"></i>
-                </button>
-            </div>
+            <button type="submit" formaction="/search/results?q=vsm">VSM</button>
+            <button type="submit" formaction="/search/results?q=bm25">BM25</button>
+{#            <div class="input-group-btn">#}
+{#                <button class="btn btn-primary btn-lg" type="submit">#}
+{#                    <i class="glyphicon glyphicon-search"></i>#}
+{#                </button>#}
+{#            </div>#}
         </div>
     </form>
     <br><br>
