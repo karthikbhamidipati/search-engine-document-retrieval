@@ -21,7 +21,7 @@ services:
       resources:
         limits:
           cpus: 0.5
-          memory: 2g
+          memory: 4g
         reservations:
           memory: 1g
 
@@ -40,10 +40,10 @@ services:
     deploy:
       resources:
         limits:
-          cpus: 0.25
+          cpus: 0.2
           memory: 2g
         reservations:
-          memory: 1g
+          memory: 512m
 
   searchengine:
     build: ./
@@ -61,10 +61,10 @@ services:
     deploy:
       resources:
         limits:
-          cpus: 0.25
-          memory: 2g
-        reservations:
+          cpus: 0.1
           memory: 1g
+        reservations:
+          memory: 512m
 
 networks:
   se_network:
