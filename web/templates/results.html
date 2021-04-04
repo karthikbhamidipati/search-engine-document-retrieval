@@ -9,14 +9,11 @@
             margin-top: 300px;
             margin-bottom: 10px;
         }
-
-
         .center_btn_cls {
             display: flex;
             justify-content: center;
             align-items: center;
         }
-
         .center-button {
             justify-content: center;
             align-items: center;
@@ -34,7 +31,6 @@
             border-radius: 12px;
             width: 250px;
         }
-
         .search-box {
             display: flex;
             text-align: center;
@@ -51,26 +47,19 @@
             background-image: url('http://www.kirupa.com/images/search.png');
             background-repeat: no-repeat;
         }
-
         .td-style {
             font-family: 'Cambria';
             text-align: center;
         }
     </style>
-
     <title>Query Search from MSMARCO dataset</title>
 </head>
 <body>
 <div class="container">
-
     <div>
-
         <div style="font-family: 'Cambria'">
-
             <p class="center"><font size="8">Search for documents based on query</font></p>
-
         </div>
-
     </div>
     <form action="/search/results" method="post">
         <input type="text" class="form-control search-box" name="input" placeholder="Search" autofocus size=150>
@@ -78,7 +67,6 @@
             <button class="center-button" type="submit" formaction="/search/results?q=bm25">BM25</button>
             <button class="center-button" type="submit" formaction="/search/results?q=vsm">VSM</button>
         </div>
-
     </form>
     <table id="BM25" class="table">
         <thead>
@@ -116,7 +104,6 @@
             </tbody>
         {% endfor %}
     </table>
-
     <script type="text/javascript">
         const urlParams = new URLSearchParams(window.location.search);
         const myParam = urlParams.get('q');
