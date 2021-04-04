@@ -2,38 +2,78 @@
 <html lang="en">
 <head>
     <style>
-        body {
-            background-image: url('../static/search-engine.jpeg');
+        .center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 300px;
+            margin-bottom: 10px;
+        }
+
+
+        .center_btn_cls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .center-button {
+            justify-content: center;
+            align-items: center;
+            background-color: rgb(166, 166, 166);
+            border: none;
+            color: black;
+            padding: 10px;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            font-family: Cambria;
+            font-size: 16px;
+            margin-right: 5px;
+            cursor: pointer;
+            border-radius: 12px;
+            width: 250px;
+        }
+
+        .search-box {
+            display: flex;
+            text-align: center;
+            margin: 0 auto;
+            margin-left: auto;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            height: 10px;
+            outline: none;
+            border: 2px solid #999999;
+            font-size: 20px;
+            font-family: Cambria;
+            background-image: url('http://www.kirupa.com/images/search.png');
             background-repeat: no-repeat;
         }
+
+        .td-style {
+            font-family: 'Cambria';
+            text-align: center;
+        }
     </style>
-    <meta charset="utf-8">
-    <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
-    <link href="../static/internet.png" rel="icon" type="image/png">
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+
     <title>Query Search from MSMARCO dataset</title>
 </head>
 <body>
 <div class="container">
     <div>
-        <div style="font-family: 'Book Antiqua', cursive;">
-            <p>
-            <center>
-                <font size="8">Search for documents based on query</font>
-            </center>
+        <div style="font-family: 'Cambria'">
+            <p class="center"><font size="8">Search for documents based on query</font></p>
         </div>
     </div>
     <form action="/search/results" method="post">
-        <div class="input-group">
-            <input autofocus class="form-control input-lg" name="input" placeholder="Search" type="text">
-            <button type="submit" formaction="/search/results?q=vsm">VSM</button>
-            <button type="submit" formaction="/search/results?q=bm25">BM25</button>
-{#            <div class="input-group-btn">#}
-{#                <button class="btn btn-primary btn-lg" type="submit">#}
-{#                    <i class="glyphicon glyphicon-search"></i>#}
-{#                </button>#}
-{#            </div>#}
+        <input type="text" class="form-control search-box" name="input" placeholder="Search" autofocus size=150>
+        <div class="center_btn_cls">
+            <button class="center-button" type="submit" formaction="/search/results?q=bm25">BM25</button>
+            <button class="center-button" type="submit" formaction="/search/results?q=vsm">VSM</button>
         </div>
+
     </form>
     <br><br>
     <footer class="footer">
