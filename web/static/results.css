@@ -1,0 +1,68 @@
+        body {
+            text-align: center;
+        }
+
+        .center-p {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 300px;
+            margin-bottom: 10px;
+        }
+
+        .center_btn_cls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .center-button {
+            justify-content: center;
+            align-items: center;
+            background-color: rgb(166, 166, 166);
+            border: none;
+            color: black;
+            padding: 10px;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            font-family: Cambria;
+            font-size: 16px;
+            margin-right: 5px;
+            cursor: pointer;
+            border-radius: 12px;
+            width: 250px;
+        }
+
+        .search-box {
+            display: flex;
+            text-align: center;
+            margin: 0 auto;
+            margin-left: auto;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            height: 10px;
+            outline: none;
+            border: 2px solid #999999;
+            font-size: 20px;
+            font-family: Cambria;
+            background-image: url('http://www.kirupa.com/images/search.png');
+            background-repeat: no-repeat;
+        }
+
+        table {
+            table-layout: fixed;
+            max-width: 500px;
+        }
+
+        table.center {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        td {
+            text-align: left;
+            font-family: Cambria;
+            font-size: 20px;
+        }
