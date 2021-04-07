@@ -54,10 +54,9 @@ def rank_eval_query(index, es_wrapper, queries_df):
     request_body = {
         "requests": get_requests(index, queries_df),
         "metric": {
-            "precision": {
+            "dcg": {
                 "k": 10,
-                "relevant_rating_threshold": 1,
-                "ignore_unlabeled": "false"
+                "normalize": "true"
             }
         }
     }
