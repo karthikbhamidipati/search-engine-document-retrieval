@@ -162,5 +162,13 @@ class Mappings:
         }
     }
 
+    # Metrics
+    DCG_METRIC = {
+            "dcg": {
+                "k": Config.NUM_DOCS_PER_QUERY,
+                "normalize": "true"
+            }
+        }
+
 
 mappings = Mappings()
