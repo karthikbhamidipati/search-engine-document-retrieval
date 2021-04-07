@@ -1,0 +1,5 @@
+<label id="suggestion_label">
+    {% for suggestion in suggestions['hits']['hits'] %}
+    {{ suggestion['fields']['title'][0] }}<br>
+    {% endfor %}
+</label>
