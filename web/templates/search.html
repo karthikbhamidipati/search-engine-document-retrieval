@@ -71,7 +71,14 @@
         <input autofocus class="form-control search-box" name="input" placeholder="Search" size=150 type="text">
         <!-- Taking input and providing suggestions -->
         <div id="suggestions"></div>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
+        <div class="center_btn_cls">
+            <button class="center-button" formaction="/search/results?q=bm25" type="submit">BM25</button>
+            <button class="center-button" formaction="/search/results?q=vsm" type="submit">VSM</button>
+        </div>
+
+    </form>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
             $("#input").keyup(function () {
                 let text = $(this).val();
                 $.ajax({
@@ -86,13 +93,8 @@
                     }
                 });
             });
-        </script>
-        <div class="center_btn_cls">
-            <button class="center-button" formaction="/search/results?q=bm25" type="submit">BM25</button>
-            <button class="center-button" formaction="/search/results?q=vsm" type="submit">VSM</button>
-        </div>
+    </script>
 
-    </form>
     <br><br>
     <footer class="footer">
         <p>&copy; 2021:Omer;Karthik;Sudipta</p>
