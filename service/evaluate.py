@@ -50,21 +50,33 @@ def get_requests(index, queries_df):
     return requests
 
 
-def rank_eval_query(index, es_wrapper, queries_df, metric):
+def rank_eval_query(index, requests, es_wrapper, metric):
     request_body = {
-        "requests": get_requests(index, queries_df),
+        "requests": requests,
         "metric": metric
     }
     return es_wrapper.rank_eval(index, request_body)
+
+
+def display_eval_results(vsm_request, bm25_request, es_wrapper, metric):
+    vsm_metrics = rank_eval_query(Config.VSM_INDEX_KEY, vsm_request, es_wrapper, metric['query'])
+    bm25_metrics = rank_eval_query(Config.BM25_INDEX_KEY, bm25_request, es_wrapper, metric['query'])
+
+    print('{} for BM25: {:.6f}, VSM: {:.6f}'.format(metric['name'],
+                                                    bm25_metrics['metric_score'],
+                                                    vsm_metrics['metric_score']))
 
 
 def rank_eval(queries_path=Config.SUBSAMPLED_ROOT):
     es_wrapper = ElasticWrapper()
     queries_df = get_queries(queries_path)
 
-    vsm_metrics = rank_eval_query(Config.VSM_INDEX_KEY, es_wrapper, queries_df, Mappings.DCG_METRIC)
-    bm25_metrics = rank_eval_query(Config.BM25_INDEX_KEY, es_wrapper, queries_df, Mappings.DCG_METRIC)
+    vsm_request = get_requests(Config.VSM_INDEX_KEY, queries_df)
+    bm25_request = get_requests(Config.BM25_INDEX_KEY, queries_df)
 
-    print('Discounted cumulative gain for BM25: {:.6f}, VSM: {:.6f}'.format(bm25_metrics['metric_score'], vsm_metrics['metric_score']))
+    display_eval_results(vsm_request, bm25_request, es_wrapper, Mappings.DCG_METRIC)
+    display_eval_results(vsm_request, bm25_request, es_wrapper, Mappings.PRECISION_METRIC)
+    display_eval_results(vsm_request, bm25_request, es_wrapper, Mappings.RECALL_METRIC)
+    display_eval_results(vsm_request, bm25_request, es_wrapper, Mappings.MRR_METRIC)
 
     es_wrapper.close()

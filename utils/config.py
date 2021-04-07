@@ -164,11 +164,55 @@ class Mappings:
 
     # Metrics
     DCG_METRIC = {
+        "name": "Discounted cumulative gain",
+        "query": {
             "dcg": {
                 "k": Config.NUM_DOCS_PER_QUERY,
                 "normalize": "true"
             }
         }
+    }
+
+    PRECISION_METRIC = {
+        "name": "Precision at {}".format(Config.NUM_DOCS_PER_QUERY),
+        "query": {
+            "precision": {
+                "k": Config.NUM_DOCS_PER_QUERY,
+                "relevant_rating_threshold": 1,
+                "ignore_unlabeled": "false"
+            }
+        }
+    }
+
+    RECALL_METRIC = {
+        "name": "Recall at {}".format(Config.NUM_DOCS_PER_QUERY),
+        "query": {
+            "recall": {
+                "k": Config.NUM_DOCS_PER_QUERY,
+                "relevant_rating_threshold": 1
+            }
+        }
+    }
+
+    MRR_METRIC = {
+        "name": "Mean reciprocal rank",
+        "query": {
+            "mean_reciprocal_rank": {
+                "k": Config.NUM_DOCS_PER_QUERY,
+                "relevant_rating_threshold": 1
+            }
+        }
+    }
+
+    ERR_METRIC = {
+        "name": "Expected reciprocal rank",
+        "query": {
+            "expected_reciprocal_rank": {
+                "maximum_relevance": 3,
+                "k": Config.NUM_DOCS_PER_QUERY
+            }
+        }
+    }
 
 
 mappings = Mappings()
