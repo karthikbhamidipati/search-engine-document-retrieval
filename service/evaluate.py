@@ -2,7 +2,7 @@ import os
 
 import dask.dataframe as dd
 
-from utils.config import Config
+from utils.config import Config, Mappings
 from utils.es_wrapper import ElasticWrapper
 
 
@@ -50,15 +50,10 @@ def get_requests(index, queries_df):
     return requests
 
 
-def rank_eval_query(index, es_wrapper, queries_df):
+def rank_eval_query(index, es_wrapper, queries_df, metric):
     request_body = {
         "requests": get_requests(index, queries_df),
-        "metric": {
-            "dcg": {
-                "k": 10,
-                "normalize": "true"
-            }
-        }
+        "metric": metric
     }
     return es_wrapper.rank_eval(index, request_body)
 
@@ -67,9 +62,9 @@ def rank_eval(queries_path=Config.SUBSAMPLED_ROOT):
     es_wrapper = ElasticWrapper()
     queries_df = get_queries(queries_path)
 
-    vsm_metrics = rank_eval_query(Config.VSM_INDEX_KEY, es_wrapper, queries_df)
-    bm25_metrics = rank_eval_query(Config.BM25_INDEX_KEY, es_wrapper, queries_df)
+    vsm_metrics = rank_eval_query(Config.VSM_INDEX_KEY, es_wrapper, queries_df, Mappings.DCG_METRIC)
+    bm25_metrics = rank_eval_query(Config.BM25_INDEX_KEY, es_wrapper, queries_df, Mappings.DCG_METRIC)
 
-    print(vsm_metrics, bm25_metrics)
+    print('Discounted cumulative gain for BM25: {:.6f}, VSM: {:.6f}'.format(bm25_metrics['metric_score'], vsm_metrics['metric_score']))
 
     es_wrapper.close()
