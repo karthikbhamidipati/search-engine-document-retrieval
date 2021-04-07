@@ -2,18 +2,24 @@
 <html lang="en">
 <head>
     <style>
-        .center {
+        body {
+            text-align: center;
+        }
+
+        .center-p {
             display: flex;
             justify-content: center;
             align-items: center;
             margin-top: 300px;
             margin-bottom: 10px;
         }
+
         .center_btn_cls {
             display: flex;
             justify-content: center;
             align-items: center;
         }
+
         .center-button {
             justify-content: center;
             align-items: center;
@@ -31,6 +37,7 @@
             border-radius: 12px;
             width: 250px;
         }
+
         .search-box {
             display: flex;
             text-align: center;
@@ -47,9 +54,21 @@
             background-image: url('http://www.kirupa.com/images/search.png');
             background-repeat: no-repeat;
         }
-        .td-style {
-            font-family: 'Cambria';
-            text-align: center;
+
+        table {
+            table-layout: fixed;
+            max-width: 500px;
+        }
+
+        table.center {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        td {
+            text-align: left;
+            font-family: Cambria;
+            font-size: 20px;
         }
     </style>
     <title>Query Search from MSMARCO dataset</title>
@@ -58,7 +77,7 @@
 <div class="container">
     <div>
         <div style="font-family: 'Cambria'">
-            <p class="center"><font size="8">Search for documents based on query</font></p>
+            <p class="center-p"><font size="8">Search for documents based on query</font></p>
         </div>
     </div>
     <form action="/search/results" method="post">
@@ -68,38 +87,22 @@
             <button class="center-button" type="submit" formaction="/search/results?q=vsm">VSM</button>
         </div>
     </form>
-    <table id="BM25" class="table">
-        <thead>
-        <tr>
-            <th style="text-align: center">BM25-Title</th>
-            <th style="text-align: center">BM25-Abstract</th>
-            <th style="text-align: center">BM25-Score</th>
-        </tr>
-        </thead>
+    <table id="BM25" class="center">
         {% for hit in bm25['hits']['hits'] %}
             <tbody>
             <tr>
-                <td class="td-style"><a href="{{ hit['_source']['url'] }}">{{ hit['_source']['title'] }}</a></td>
-                <td style="width:50%; font-family: 'Cambria';">{{ hit['_source']['body'][:200] }}</td>
-                <td class="td-style">{{ hit['_score'] }}</td>
+                <td><a href="{{ hit['_source']['url'] }}">{{ hit['_source']['title'] }}</a>
+                    <br>{{ hit['_source']['body'][:300] }}...<br><b>Score : {{ hit['_score'] }}</b><br><br><br></td>
             </tr>
             </tbody>
         {% endfor %}
     </table>
-    <table id="VSM" class="table">
-        <thead>
-        <tr>
-            <th style="text-align: center">VSM-Title</th>
-            <th style="text-align: center">VSM-Abstract</th>
-            <th style="text-align: center">VSM-Score</th>
-        </tr>
-        </thead>
+    <table id="VSM" class="center">
         {% for hit in vsm['hits']['hits'] %}
             <tbody>
             <tr>
-                <td class="td-style"><a href="{{ hit['_source']['url'] }}">{{ hit['_source']['title'] }}</a></td>
-                <td style="width:50%; font-family: 'Cambria';">{{ hit['_source']['body'][:200] }}</td>
-                <td class="td-style">{{ hit['_score'] }}</td>
+                <td><a href="{{ hit['_source']['url'] }}">{{ hit['_source']['title'] }}</a>
+                    <br>{{ hit['_source']['body'][:300] }}...<br><b>Score : {{ hit['_score'] }}</b><br><br><br></td>
             </tr>
             </tbody>
         {% endfor %}
