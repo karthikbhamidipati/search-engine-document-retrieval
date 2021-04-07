@@ -50,9 +50,9 @@ def get_requests(index, queries_df):
     return requests
 
 
-def rank_eval_query(index, es_wrapper, queries_df, metric):
+def rank_eval_query(index, requests, es_wrapper, metric):
     request_body = {
-        "requests": get_requests(index, queries_df),
+        "requests": requests,
         "metric": metric
     }
     return es_wrapper.rank_eval(index, request_body)
