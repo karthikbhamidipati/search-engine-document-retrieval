@@ -61,10 +61,25 @@ class Mappings:
     VSM_MAPPING = {
         "settings": {
             "analysis": {
+                "filter": {
+                    "autocomplete_filter": {
+                        "type": "edge_ngram",
+                        "min_gram": 2,
+                        "max_gram": 15
+                    }
+                },
                 "analyzer": {
                     "text_analyzer": {
                         "tokenizer": "standard",
                         "filter": ["lowercase", "stemmer", "stop"]
+                    },
+                    "autocomplete": {
+                        "type": "custom",
+                        "tokenizer": "standard",
+                        "filter": [
+                            "lowercase",
+                            "autocomplete_filter"
+                        ]
                     }
                 }
             },
@@ -93,6 +108,7 @@ class Mappings:
             "properties": {
                 "docid": {"type": "keyword"},
                 "url": {"type": "keyword"},
+                "query": {"type": "text", "analyzer": "autocomplete"},
                 "title": {"type": "text", "analyzer": "text_analyzer", "similarity": "scripted_tfidf"},
                 "body": {"type": "text", "analyzer": "text_analyzer", "similarity": "scripted_tfidf"}
             }
@@ -103,10 +119,25 @@ class Mappings:
     BM25_MAPPING = {
         "settings": {
             "analysis": {
+                "filter": {
+                    "autocomplete_filter": {
+                        "type": "edge_ngram",
+                        "min_gram": 2,
+                        "max_gram": 15
+                    }
+                },
                 "analyzer": {
                     "text_analyzer": {
                         "tokenizer": "standard",
                         "filter": ["lowercase", "stemmer", "stop"]
+                    },
+                    "autocomplete": {
+                        "type": "custom",
+                        "tokenizer": "standard",
+                        "filter": [
+                            "lowercase",
+                            "autocomplete_filter"
+                        ]
                     }
                 }
             },
@@ -124,6 +155,7 @@ class Mappings:
             "properties": {
                 "docid": {"type": "keyword"},
                 "url": {"type": "keyword"},
+                "query": {"type": "text", "analyzer": "autocomplete"},
                 "title": {"type": "text", "analyzer": "text_analyzer", "similarity": "bm25"},
                 "body": {"type": "text", "analyzer": "text_analyzer", "similarity": "bm25"}
             }

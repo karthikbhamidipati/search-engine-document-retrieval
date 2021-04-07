@@ -14,6 +14,7 @@ def get_docs_json(index, docs_df):
             "_source": {
                 Config.DOCID_KEY: row[Config.DOCID_KEY],
                 "url": row["url"],
+                "query": row["title"],
                 "title": row["title"],
                 "body": row["body"]
             }

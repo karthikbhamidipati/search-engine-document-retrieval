@@ -68,10 +68,28 @@
         </div>
     </div>
     <form action="/search/results" method="post">
-        <input type="text" class="form-control search-box" name="input" placeholder="Search" autofocus size=150>
+        <input autofocus class="form-control search-box" name="input" placeholder="Search" size=150 type="text">
+        <!-- Taking input and providing suggestions -->
+        <div id="suggestions"></div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
+            $("#input").keyup(function () {
+                let text = $(this).val();
+                $.ajax({
+                    url: "/suggestions",
+                    type: "get",
+                    data: {search_query: text},
+                    success: function (response) {
+                        $("#suggestions").html(response);
+                    },
+                    error: function (xhr, exception) {
+                        $('#post').html(xhr.status + ' ' + exception.message);
+                    }
+                });
+            });
+        </script>
         <div class="center_btn_cls">
-            <button class="center-button" type="submit" formaction="/search/results?q=bm25">BM25</button>
-            <button class="center-button" type="submit" formaction="/search/results?q=vsm">VSM</button>
+            <button class="center-button" formaction="/search/results?q=bm25" type="submit">BM25</button>
+            <button class="center-button" formaction="/search/results?q=vsm" type="submit">VSM</button>
         </div>
 
     </form>

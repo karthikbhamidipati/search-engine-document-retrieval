@@ -7,11 +7,6 @@ app = Flask(__name__.split('.')[-1], template_folder="web/templates", static_fol
 es_wrapper = ElasticWrapper()
 
 
-@app.route('/')
-def home():
-    return render_template('search.html')
-
-
 def get_query(search_term):
     return {
         "query": {
@@ -26,6 +21,25 @@ def get_query(search_term):
     }
 
 
+def get_suggestions(search_term):
+    return {
+        {
+            "query": {
+                "match": {
+                    "query": search_term
+                }
+            },
+            "fields": ["title"],
+            "_source": False
+        }
+    }
+
+
+@app.route('/')
+def home():
+    return render_template('search.html')
+
+
 @app.route('/search/results', methods=['GET', 'POST'])
 def search_request():
     search_term = request.form["input"]
@@ -34,6 +48,14 @@ def search_request():
     bm25_res = es_wrapper.search_index(config.BM25_INDEX_KEY, get_query(search_term))
 
     return render_template('results.html', vsm=vsm_res, bm25=bm25_res)
+
+
+@app.route('/suggestions')
+def suggestions():
+    search_term = request.args.get('search_query')
+    query_suggestions = es_wrapper.search_index(config.BM25_INDEX_KEY, get_suggestions(search_term))
+    print(query_suggestions)
+    return render_template('suggestions.html', suggestions=query_suggestions)
 
 
 def run(secret_key=config.APP_SECRET_KEY, port=config.APP_PORT):
