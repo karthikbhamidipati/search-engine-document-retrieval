@@ -1,5 +1,6 @@
-<label id="suggestion_label">
+<datalist id="wizards-list">
     {% for suggestion in suggestions['hits']['hits'] %}
-    {{ suggestion['fields']['title'][0] }}<br>
+        <option>{{ suggestion['fields']['title'][0]}}</option>
     {% endfor %}
-</label>
+</datalist>
+

@@ -23,7 +23,6 @@ def get_query(search_term):
 
 def get_suggestions(search_term):
     return {
-        {
             "query": {
                 "match": {
                     "query": search_term
@@ -31,7 +30,6 @@ def get_suggestions(search_term):
             },
             "fields": ["title"],
             "_source": False
-        }
     }
 
 
@@ -47,14 +45,13 @@ def search_request():
     vsm_res = es_wrapper.search_index(config.VSM_INDEX_KEY, get_query(search_term))
     bm25_res = es_wrapper.search_index(config.BM25_INDEX_KEY, get_query(search_term))
 
-    return render_template('results.html', vsm=vsm_res, bm25=bm25_res)
+    return render_template('results.html', vsm=vsm_res, bm25=bm25_res, search_term=search_term)
 
 
 @app.route('/suggestions')
 def suggestions():
     search_term = request.args.get('search_query')
     query_suggestions = es_wrapper.search_index(config.BM25_INDEX_KEY, get_suggestions(search_term))
-    print(query_suggestions)
     return render_template('suggestions.html', suggestions=query_suggestions)
 
 
