@@ -13,10 +13,10 @@ Retrieval Models implemented:
 
 Unzip the folder, `cd` onto the project directory and run ```pip install -r requirements.txt``` from terminal to install the required dependencies.
 
-* elasticsearch version should be 7.12.0 or above
-* flask version should be 1.1.2 or above
-* pandas version should be 1.2.3 or above
-* dask[dataframe]
+* `elasticsearch-python` version should be 7.12.0 or above
+* `flask` version should be 1.1.2 or above
+* `pandas` version should be 1.2.3 or above
+* `dask[dataframe]`
 
 ## Execution
 
