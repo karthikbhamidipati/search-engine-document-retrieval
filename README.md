@@ -24,3 +24,9 @@ Unzip the folder, `cd` onto the project directory and run ```pip install -r requ
 * Run ```python main.py index``` file to run the indexing of the documents on elasticsearch.
 * Run ```python main.py eval``` file to to run evaluation of top 100 queries.
 * Run ```python main.py start_app```file to start the front-end part of the search engine. Search engine's webpage can be reached via http://localhost:5000/
+
+## Contributors
+
+- [Karthik Bhamidipati](https://github.com/vamshikarthik)
+- [Omer Faruk Yildirim](https://github.com/farukyld)
+- [Sudipta Mondal](https://github.com/sudiptamondal1802)
