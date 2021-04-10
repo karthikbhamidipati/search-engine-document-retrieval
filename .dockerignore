@@ -1,5 +1,4 @@
 # ignoring files that are not required
-LICENSE
 *.md
 data*
 .*
