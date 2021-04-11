@@ -14,10 +14,11 @@ class Config:
     ELASTIC_SEARCH_MAX_THREADS = os.environ.get('ELASTIC_SEARCH_MAX_THREADS') or 10
 
     # subsampling configurations
+    USE_CLUSTERS = os.environ.get('USE_CLUSTERS') or False
     SUBSAMPLED_ROOT = os.environ.get('SUBSAMPLED_ROOT') or "data/"
-    NUM_SAMPLES = os.environ.get('NUM_SAMPLES') or 100
+    NUM_SAMPLES = os.environ.get('NUM_SAMPLES') or 150
     NUM_DOCS_PER_QUERY = os.environ.get('NUM_DOCS_PER_QUERY') or 20
-    CLUSTER_ID = os.environ.get('CLUSTER_ID') or 2
+    CLUSTER_IDS = (0, 3, 4, 5, 6)
 
     # input files
     DOCS_FILE_NAME = os.environ.get('file_name') or "msmarco-docs.tsv"

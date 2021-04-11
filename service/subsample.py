@@ -61,9 +61,9 @@ def subsample_docs(input_dir, output_dir=Config.SUBSAMPLED_ROOT,
     :return:
     """
     # reading queries
-    if exists(input_dir, Config.CLUSTERED_QUERIES_FILE_NAME):
+    if Config.USE_CLUSTERS and exists(input_dir, Config.CLUSTERED_QUERIES_FILE_NAME):
         queries_sampled = read_data(input_dir, Config.CLUSTERED_QUERIES_FILE_NAME, ',')
-        queries_sampled = queries_sampled[queries_sampled.cluster == Config.CLUSTER_ID].reset_index(drop=True)
+        queries_sampled = queries_sampled[queries_sampled.cluster.isin(Config.CLUSTER_IDS)].reset_index(drop=True)
         queries_sampled = queries_sampled.drop('cluster', axis=1)
     else:
         queries_sampled = read_data(input_dir, Config.QUERIES_FILE_NAME, '\t',
