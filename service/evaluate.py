@@ -62,9 +62,9 @@ def display_eval_results(vsm_request, bm25_request, es_wrapper, metric):
     vsm_metrics = rank_eval_query(Config.VSM_INDEX_KEY, vsm_request, es_wrapper, metric['query'])
     bm25_metrics = rank_eval_query(Config.BM25_INDEX_KEY, bm25_request, es_wrapper, metric['query'])
 
-    print('{} for BM25: {:.6f}, VSM: {:.6f}'.format(metric['name'],
-                                                    bm25_metrics['metric_score'],
-                                                    vsm_metrics['metric_score']))
+    print('{} for BM25: {:.2f}%, VSM: {:.2f}%'.format(metric['name'],
+                                                      bm25_metrics['metric_score'] * 100,
+                                                      vsm_metrics['metric_score'] * 100))
 
 
 def rank_eval(queries_path=Config.SUBSAMPLED_ROOT):
