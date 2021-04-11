@@ -4,8 +4,6 @@ from utils.config import Config
 
 
 class ElasticWrapper:
-    """ TODO add documentation, logging, error handling
-    """
 
     def __init__(self, uri=Config.ELASTIC_SEARCH_URI):
         self._establish_connection(uri)

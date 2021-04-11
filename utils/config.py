@@ -14,14 +14,17 @@ class Config:
     ELASTIC_SEARCH_MAX_THREADS = os.environ.get('ELASTIC_SEARCH_MAX_THREADS') or 10
 
     # subsampling configurations
+    USE_CLUSTERS = os.environ.get('USE_CLUSTERS') or False
     SUBSAMPLED_ROOT = os.environ.get('SUBSAMPLED_ROOT') or "data/"
-    NUM_SAMPLES = os.environ.get('NUM_SAMPLES') or 100
+    NUM_SAMPLES = os.environ.get('NUM_SAMPLES') or 150
     NUM_DOCS_PER_QUERY = os.environ.get('NUM_DOCS_PER_QUERY') or 20
+    CLUSTER_IDS = (0, 3, 4, 5, 6)
 
     # input files
     DOCS_FILE_NAME = os.environ.get('file_name') or "msmarco-docs.tsv"
     QUERIES_FILE_NAME = os.environ.get('QUERIES_FILE_NAME') or "msmarco-doctrain-queries.tsv"
     TOP100_FILE_NAME = os.environ.get('TOP100_FILE_NAME') or "msmarco-doctrain-top100"
+    CLUSTERED_QUERIES_FILE_NAME = os.environ.get('CLUSTERED_QUERIES_FILE_NAME') or "msmarco-clustered-queries.csv"
 
     # sampled files
     DOCS_FILE_SAMPLED = os.path.splitext(DOCS_FILE_NAME)[0] + ".csv"
@@ -32,6 +35,7 @@ class Config:
     DOCS_HEADERS = ['docid', 'url', 'title', 'body']
     QUERIES_HEADERS = ['qid', 'query']
     TOP100_HEADERS = ['qid', 'Q0', 'docid', 'rank', 'score', 'runstring']
+    CLUSTERED_QUERIES_HEADERS = ['qid', 'query', 'cluster']
 
     # data keys
     DOCID_KEY = "docid"
