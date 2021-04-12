@@ -53,7 +53,6 @@ def suggestions():
     search_term = request.args.get('search_query')
     print("Search term{}".format(search_term))
     query_suggestions = es_wrapper.search_index(config.BM25_INDEX_KEY, get_suggestions(search_term))
-    print(query_suggestions)
     return render_template('suggestions.html', suggestions=query_suggestions)
 
 

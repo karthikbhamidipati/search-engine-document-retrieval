@@ -14,14 +14,17 @@ class Config:
     ELASTIC_SEARCH_MAX_THREADS = os.environ.get('ELASTIC_SEARCH_MAX_THREADS') or 10
 
     # subsampling configurations
+    USE_CLUSTERS = os.environ.get('USE_CLUSTERS') or False
     SUBSAMPLED_ROOT = os.environ.get('SUBSAMPLED_ROOT') or "data/"
-    NUM_SAMPLES = os.environ.get('NUM_SAMPLES') or 100
+    NUM_SAMPLES = os.environ.get('NUM_SAMPLES') or 150
     NUM_DOCS_PER_QUERY = os.environ.get('NUM_DOCS_PER_QUERY') or 20
+    CLUSTER_IDS = (0, 3, 4, 5, 6)
 
     # input files
     DOCS_FILE_NAME = os.environ.get('file_name') or "msmarco-docs.tsv"
     QUERIES_FILE_NAME = os.environ.get('QUERIES_FILE_NAME') or "msmarco-doctrain-queries.tsv"
     TOP100_FILE_NAME = os.environ.get('TOP100_FILE_NAME') or "msmarco-doctrain-top100"
+    CLUSTERED_QUERIES_FILE_NAME = os.environ.get('CLUSTERED_QUERIES_FILE_NAME') or "msmarco-clustered-queries.csv"
 
     # sampled files
     DOCS_FILE_SAMPLED = os.path.splitext(DOCS_FILE_NAME)[0] + ".csv"
@@ -32,6 +35,7 @@ class Config:
     DOCS_HEADERS = ['docid', 'url', 'title', 'body']
     QUERIES_HEADERS = ['qid', 'query']
     TOP100_HEADERS = ['qid', 'Q0', 'docid', 'rank', 'score', 'runstring']
+    CLUSTERED_QUERIES_HEADERS = ['qid', 'query', 'cluster']
 
     # data keys
     DOCID_KEY = "docid"
@@ -158,6 +162,58 @@ class Mappings:
                 "query": {"type": "text", "analyzer": "autocomplete"},
                 "title": {"type": "text", "analyzer": "text_analyzer", "similarity": "bm25"},
                 "body": {"type": "text", "analyzer": "text_analyzer", "similarity": "bm25"}
+            }
+        }
+    }
+
+    # Metrics
+    DCG_METRIC = {
+        "name": "Discounted cumulative gain",
+        "query": {
+            "dcg": {
+                "k": Config.NUM_DOCS_PER_QUERY,
+                "normalize": "true"
+            }
+        }
+    }
+
+    PRECISION_METRIC = {
+        "name": "Precision at {}".format(Config.NUM_DOCS_PER_QUERY),
+        "query": {
+            "precision": {
+                "k": Config.NUM_DOCS_PER_QUERY,
+                "relevant_rating_threshold": 1,
+                "ignore_unlabeled": "false"
+            }
+        }
+    }
+
+    RECALL_METRIC = {
+        "name": "Recall at {}".format(Config.NUM_DOCS_PER_QUERY),
+        "query": {
+            "recall": {
+                "k": Config.NUM_DOCS_PER_QUERY,
+                "relevant_rating_threshold": 1
+            }
+        }
+    }
+
+    MRR_METRIC = {
+        "name": "Mean reciprocal rank",
+        "query": {
+            "mean_reciprocal_rank": {
+                "k": Config.NUM_DOCS_PER_QUERY,
+                "relevant_rating_threshold": 1
+            }
+        }
+    }
+
+    ERR_METRIC = {
+        "name": "Expected reciprocal rank",
+        "query": {
+            "expected_reciprocal_rank": {
+                "maximum_relevance": 3,
+                "k": Config.NUM_DOCS_PER_QUERY
             }
         }
     }

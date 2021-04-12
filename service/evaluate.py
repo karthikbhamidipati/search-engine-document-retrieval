@@ -2,7 +2,7 @@ import os
 
 import dask.dataframe as dd
 
-from utils.config import Config
+from utils.config import Config, Mappings
 from utils.es_wrapper import ElasticWrapper
 
 
@@ -50,26 +50,33 @@ def get_requests(index, queries_df):
     return requests
 
 
-def rank_eval_query(index, es_wrapper, queries_df):
+def rank_eval_query(index, requests, es_wrapper, metric):
     request_body = {
-        "requests": get_requests(index, queries_df),
-        "metric": {
-            "dcg": {
-                "k": 10,
-                "normalize": "true"
-            }
-        }
+        "requests": requests,
+        "metric": metric
     }
     return es_wrapper.rank_eval(index, request_body)
+
+
+def display_eval_results(vsm_request, bm25_request, es_wrapper, metric):
+    vsm_metrics = rank_eval_query(Config.VSM_INDEX_KEY, vsm_request, es_wrapper, metric['query'])
+    bm25_metrics = rank_eval_query(Config.BM25_INDEX_KEY, bm25_request, es_wrapper, metric['query'])
+
+    print('{} for BM25: {:.2f}%, VSM: {:.2f}%'.format(metric['name'],
+                                                      bm25_metrics['metric_score'] * 100,
+                                                      vsm_metrics['metric_score'] * 100))
 
 
 def rank_eval(queries_path=Config.SUBSAMPLED_ROOT):
     es_wrapper = ElasticWrapper()
     queries_df = get_queries(queries_path)
 
-    vsm_metrics = rank_eval_query(Config.VSM_INDEX_KEY, es_wrapper, queries_df)
-    bm25_metrics = rank_eval_query(Config.BM25_INDEX_KEY, es_wrapper, queries_df)
+    vsm_request = get_requests(Config.VSM_INDEX_KEY, queries_df)
+    bm25_request = get_requests(Config.BM25_INDEX_KEY, queries_df)
 
-    print(vsm_metrics, bm25_metrics)
+    display_eval_results(vsm_request, bm25_request, es_wrapper, Mappings.DCG_METRIC)
+    display_eval_results(vsm_request, bm25_request, es_wrapper, Mappings.PRECISION_METRIC)
+    display_eval_results(vsm_request, bm25_request, es_wrapper, Mappings.RECALL_METRIC)
+    display_eval_results(vsm_request, bm25_request, es_wrapper, Mappings.MRR_METRIC)
 
     es_wrapper.close()
