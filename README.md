@@ -2,7 +2,7 @@
 
 ## Overview
 
-Implementation of a search engine with two different retrieval models, evaluation of the models’ results using the queries and their top-100 relevant docs from the MS MARCO dataset and a web interface for the user to query the data and retrieve results.
+Implementation of a search engine with two different retrieval models, evaluation of the models’ results using the queries and their top-100 relevant docs from the MS MARCO dataset and a web interface for the user to query the data and retrieve results. The data is available in `data` directory in the project root.
 
 Retrieval Models implemented:
 
